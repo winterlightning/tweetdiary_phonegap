@@ -54,8 +54,19 @@
     e = Entry.find(window.r_id);
     e.destroy();
     window.store.loadData(get_entry_from_spine(), false);
-    window.carousel.setActiveItem(1, 'flip');
-    return window.list.refresh();
+    window.list.refresh();
+    return window.carousel.setActiveItem(1, 'flip');
+  };
+
+  window.save_entry = function() {
+    var e, value;
+    e = Entry.find(window.r_id);
+    value = $("#writearea").val();
+    e.text = value;
+    e.save();
+    window.store.loadData(get_entry_from_spine(), false);
+    window.list.refresh();
+    return window.carousel.setActiveItem(1, 'flip');
   };
 
   Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app");
@@ -110,10 +121,10 @@
         },
         items: [
           {
-            html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
+            html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" onclick=\"window.save_entry()\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
           }, list, {
             title: "Tab 3",
-            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;\">\n  \n</div>"
+            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;\">\n  <a href=\"\" class=\"\">Save one two three</a>\n</div>"
           }
         ]
       });

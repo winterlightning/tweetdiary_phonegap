@@ -29,8 +29,18 @@ window.delete_entry = () ->
   e.destroy()
   
   window.store.loadData(get_entry_from_spine(), false)
-  window.carousel.setActiveItem( 1, 'flip' )
   window.list.refresh()
+  window.carousel.setActiveItem( 1, 'flip' )
+
+window.save_entry = () ->
+  e = Entry.find(window.r_id)
+  value = $("#writearea").val()
+  e.text = value
+  e.save()
+  
+  window.store.loadData(get_entry_from_spine(), false)
+  window.list.refresh()
+  window.carousel.setActiveItem( 1, 'flip' )
 
 Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app") #switch this with your own app key (please!!!!)
 
@@ -92,14 +102,14 @@ Ext.setup
       items: [
         html: """<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>
         <div id="buttonbar">
-          <a class="button">Save</a>
+          <a class="button" onclick="window.save_entry()">Save</a>
           <a class="button" id="rightbutton" onclick="window.delete_entry()">Delete</a>
         </div>
         """
       , list,
         title: "Tab 3"
         html: """<div style=\"background-image: url(img/linen.png);height:100%;width:100%;\">
-          
+          <a href="" class="">Save one two three</a>
         </div>"""
       ]
     )
