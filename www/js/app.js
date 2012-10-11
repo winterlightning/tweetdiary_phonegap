@@ -22,7 +22,8 @@
           text: entry.text,
           create_time: timeago,
           tags: entry.tags.toString(),
-          date: date
+          date: date,
+          id: entry.id
         }
       ], true);
     }
@@ -41,10 +42,20 @@
         text: entry.text,
         create_time: timeago,
         tags: entry.tags.toString(),
-        date: date
+        date: date,
+        id: entry.id
       });
     }
     return all_entries;
+  };
+
+  window.delete_entry = function() {
+    var e;
+    e = Entry.find(window.r_id);
+    e.destroy();
+    window.store.loadData(get_entry_from_spine(), false);
+    window.carousel.setActiveItem(1, 'flip');
+    return window.list.refresh();
   };
 
   Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app");
@@ -79,6 +90,8 @@
         onItemDisclosure: {
           scope: "test",
           handler: function(record, btn, index) {
+            console.log(record.data);
+            window.r_id = record.data.id;
             $("#buttonbar").show();
             $("#writearea").val(record.get("text"));
             return window.carousel.setActiveItem(0, 'flip');
@@ -90,13 +103,14 @@
         centered: true,
         modal: true
       }));
+      window.list = list;
       carousel1 = new Ext.Carousel({
         defaults: {
           cls: "card"
         },
         items: [
           {
-            html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" href=\"#\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" href=\"#\">Delete</a>\n</div>"
+            html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
           }, list, {
             title: "Tab 3",
             html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;\">\n  \n</div>"

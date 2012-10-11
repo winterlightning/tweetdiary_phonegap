@@ -13,7 +13,7 @@ window.create_new_entry = ()->
     timeago = jQuery.timeago(d)
     date = d.getUTCMonth() + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
     
-    window.store.loadData([{text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date }], true)
+    window.store.loadData([{text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id }], true)
 
 window.get_entry_from_spine = ()->
   all_entries = [] 
@@ -21,8 +21,16 @@ window.get_entry_from_spine = ()->
     d = new Date(entry.create_time)
     timeago = jQuery.timeago(d)
     date = d.getUTCMonth() + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
-    all_entries.push( text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date ) 
+    all_entries.push( text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id ) 
   all_entries
+
+window.delete_entry = () ->
+  e = Entry.find(window.r_id)
+  e.destroy()
+  
+  window.store.loadData(get_entry_from_spine(), false)
+  window.carousel.setActiveItem( 1, 'flip' )
+  window.list.refresh()
 
 Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app") #switch this with your own app key (please!!!!)
 
@@ -62,6 +70,8 @@ Ext.setup
         scope: "test"
         handler: (record, btn, index) ->
           #alert "Disclose more info for " + record.get("firstName")
+          console.log( record.data )
+          window.r_id = record.data.id
           $("#buttonbar").show()
           $("#writearea").val(record.get("text"))
           window.carousel.setActiveItem( 0, 'flip' )
@@ -72,6 +82,7 @@ Ext.setup
       centered: true
       modal: true
     ))
+    window.list = list
     
     # Create a Carousel of Items
     carousel1 = new Ext.Carousel(
@@ -81,8 +92,8 @@ Ext.setup
       items: [
         html: """<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>
         <div id="buttonbar">
-          <a class="button" href="#">Save</a>
-          <a class="button" id="rightbutton" href="#">Delete</a>
+          <a class="button">Save</a>
+          <a class="button" id="rightbutton" onclick="window.delete_entry()">Delete</a>
         </div>
         """
       , list,
