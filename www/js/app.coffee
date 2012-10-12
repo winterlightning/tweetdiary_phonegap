@@ -108,8 +108,12 @@ Ext.setup
         """
       , list,
         title: "Tab 3"
-        html: """<div style=\"background-image: url(img/linen.png);height:100%;width:100%;\">
-          <a href="" class="">Save one two three</a>
+        html: """<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">
+          <p style="color: #fff; padding: 20px; padding-bottom: 0px;">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>
+          <p style="color: #fff; padding: 20px">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>
+          
+          <a class="large black awesome">Authorize</a><br />
+          <a class="large blue awesome">Validate</a>
         </div>"""
       ]
     )

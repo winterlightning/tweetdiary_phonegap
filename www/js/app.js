@@ -124,7 +124,7 @@
             html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" onclick=\"window.save_entry()\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
           }, list, {
             title: "Tab 3",
-            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;\">\n  <a href=\"\" class=\"\">Save one two three</a>\n</div>"
+            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">\n  <p style=\"color: #fff; padding: 20px; padding-bottom: 0px;\">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>\n  <p style=\"color: #fff; padding: 20px\">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>\n  \n  <a class=\"large black awesome\">Authorize</a><br />\n  <a class=\"large blue awesome\">Validate</a>\n</div>"
           }
         ]
       });
