@@ -23,7 +23,8 @@
           create_time: timeago,
           tags: entry.tags.toString(),
           date: date,
-          id: entry.id
+          id: entry.id,
+          seconds: d / 1000
         }
       ], true);
     }
@@ -32,7 +33,7 @@
   window.get_entry_from_spine = function() {
     var all_entries, d, date, entry, timeago, _i, _len, _ref;
     all_entries = [];
-    _ref = Entry.all().sort(Entry.ordersort);
+    _ref = Entry.all();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       entry = _ref[_i];
       d = new Date(entry.create_time);
@@ -43,7 +44,8 @@
         create_time: timeago,
         tags: entry.tags.toString(),
         date: date,
-        id: entry.id
+        id: entry.id,
+        seconds: d / 1000
       });
     }
     return all_entries;
@@ -73,16 +75,13 @@
 
   Entry = Nimbus.Model.setup("Entry", ["text", "create_time", "tags"]);
 
-  Entry.ordersort = function(a, b) {
-    var x, y;
-    x = new Date(a.create_time);
-    y = new Date(b.create_time);
-    if (x > y) {
-      return -1;
-    } else {
-      return 1;
-    }
-  };
+  /*
+  Entry.ordersort = (a, b) ->
+    x = new Date(a.create_time)
+    y = new Date(b.create_time)
+    (if (x > y) then -1 else 1)
+  */
+
 
   Ext.setup({
     tabletStartupScreen: "tablet_startup.png",
@@ -92,11 +91,15 @@
     onReady: function() {
       var all_entries, carousel1, groupingBase, list;
       Ext.regModel("Entry", {
-        fields: ["text", "create_time", "tags", "date"]
+        fields: ["text", "create_time", "tags", "date", "seconds"]
       });
       all_entries = get_entry_from_spine();
       window.store = new Ext.data.Store({
         model: "Entry",
+        sorters: {
+          property: "seconds",
+          direction: "DESC"
+        },
         getGroupString: function(record) {
           return record.get("date");
         },

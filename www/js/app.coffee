@@ -13,16 +13,16 @@ window.create_new_entry = ()->
     timeago = jQuery.timeago(d)
     date = (d.getUTCMonth() + 1 ) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
 
-    window.store.loadData([{text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id }], true)
+    window.store.loadData([{text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id, seconds: (d/1000) }], true)
 
 window.get_entry_from_spine = ()->
   all_entries = [] 
-  for entry in Entry.all().sort(Entry.ordersort)
+  for entry in Entry.all()
     d = new Date(entry.create_time)
     timeago = jQuery.timeago(d)
     date = (d.getUTCMonth() + 1 ) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
 
-    all_entries.push( text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id ) 
+    all_entries.push( text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id, seconds: (d/1000) ) 
   all_entries
 
 window.delete_entry = () ->
@@ -47,10 +47,12 @@ Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app") 
 
 Entry = Nimbus.Model.setup("Entry", ["text", "create_time", "tags"]) 
 
+###
 Entry.ordersort = (a, b) ->
   x = new Date(a.create_time)
   y = new Date(b.create_time)
   (if (x > y) then -1 else 1)
+###
 
 Ext.setup
   tabletStartupScreen: "tablet_startup.png"
@@ -61,13 +63,16 @@ Ext.setup
   onReady: ->
     
     Ext.regModel "Entry",
-      fields: ["text", "create_time", "tags", "date"]
+      fields: ["text", "create_time", "tags", "date", "seconds"]
     
     all_entries = get_entry_from_spine()
     
     window.store = new Ext.data.Store(
       model: "Entry"
-      #sorters: "create_time"
+      sorters: 
+        property:"seconds"
+        direction: "DESC"
+        
       getGroupString: (record) ->
         record.get("date")
 
