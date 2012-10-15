@@ -11,8 +11,8 @@ window.create_new_entry = ()->
     
     d = new Date(entry.create_time)
     timeago = jQuery.timeago(d)
-    date = d.getUTCMonth() + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
-    
+    date = (d.getUTCMonth() + 1 ) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
+
     window.store.loadData([{text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id }], true)
 
 window.get_entry_from_spine = ()->
@@ -20,7 +20,8 @@ window.get_entry_from_spine = ()->
   for entry in Entry.all()
     d = new Date(entry.create_time)
     timeago = jQuery.timeago(d)
-    date = d.getUTCMonth() + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
+    date = (d.getUTCMonth() + 1 ) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
+
     all_entries.push( text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id ) 
   all_entries
 
@@ -145,18 +146,18 @@ Ext.setup
         false
 
 window.auth = ()-> 
-  ios.notify( title: "Authentication in progress", message: "Wait for the browser window to open up and authenticate." )
+  ios_notify.notify( title: "Authentication in progress", message: "Wait for the browser window to open up and authenticate." )
   Nimbus.Auth.authorize()
 
 window.validate = ()->
   Nimbus.Auth.initialize()
 
 Nimbus.Auth.authorized_callback = ()->
-  ios.notify( title: "Validation", message: "Validation is done! Now your data is stored in Dropbox." )
+  ios_notify.notify( title: "Validation", message: "Validation is done! Now your data is stored in Dropbox." )
   Entry.sync_all( ()->
     window.store.loadData(get_entry_from_spine(), false)
     window.list.refresh()
-    ios.notify( title: "Synced", message: "Data synced!" )
+    ios_notify.notify( title: "Synced", message: "Data synced!" )
   )
   
 exports = this #this is needed to get around the coffeescript namespace wrap

@@ -16,7 +16,7 @@
       $("#writearea").val("");
       d = new Date(entry.create_time);
       timeago = jQuery.timeago(d);
-      date = d.getUTCMonth() + "/" + d.getUTCDate() + "/" + d.getUTCFullYear();
+      date = (d.getUTCMonth() + 1) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear();
       return window.store.loadData([
         {
           text: entry.text,
@@ -37,7 +37,7 @@
       entry = _ref[_i];
       d = new Date(entry.create_time);
       timeago = jQuery.timeago(d);
-      date = d.getUTCMonth() + "/" + d.getUTCDate() + "/" + d.getUTCFullYear();
+      date = (d.getUTCMonth() + 1) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear();
       all_entries.push({
         text: entry.text,
         create_time: timeago,
@@ -157,7 +157,7 @@
   });
 
   window.auth = function() {
-    ios.notify({
+    ios_notify.notify({
       title: "Authentication in progress",
       message: "Wait for the browser window to open up and authenticate."
     });
@@ -169,14 +169,14 @@
   };
 
   Nimbus.Auth.authorized_callback = function() {
-    ios.notify({
+    ios_notify.notify({
       title: "Validation",
       message: "Validation is done! Now your data is stored in Dropbox."
     });
     return Entry.sync_all(function() {
       window.store.loadData(get_entry_from_spine(), false);
       window.list.refresh();
-      return ios.notify({
+      return ios_notify.notify({
         title: "Synced",
         message: "Data synced!"
       });

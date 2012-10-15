@@ -1,6 +1,6 @@
 /*global $*/
 
-var ios = (function() {
+var ios_notify = (function() {
 
 	"use strict";
 
