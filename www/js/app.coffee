@@ -98,6 +98,18 @@ Ext.setup
       multiSelect: false  
       grouped: true
       indexBar: false
+      
+      ###
+      onItemTap: ()->
+        console.log("testing item tap")
+          #alert "Disclose more info for " + record.get("firstName")
+          console.log( record.data )
+          window.r_id = record.data.id
+          $("#buttonbar").show()
+          $("#writearea").val(record.get("text"))
+          window.carousel.setActiveItem( 0, 'flip' )
+      ###
+          
       onItemDisclosure:
         scope: "test"
         handler: (record, btn, index) ->
@@ -171,7 +183,7 @@ Ext.setup
         window.create_new_entry()
         false
 
-    window.auto_sync()
+    #window.auto_sync()
 
 window.auth = ()-> 
   ios_notify.notify( title: "Authentication in progress", message: "Wait for the browser window to open up and authenticate." )

@@ -17,7 +17,7 @@
 	    	#writearea { padding-bottom: 60px; }
 	    	.x-list-header { background: -webkit-gradient(linear, left top, left bottom, color-stop(3%,#3D3D3D), color-stop(4%,#313131), color-stop(100%,#232323)); color: white; text-shadow: none; border-top: 0px; border-bottom: 1px solid #555;}
 	    	.x-list .x-list-item { background: url(img/darkdenim3.png); background-color: #333; color: #eee; border-top: 1px solid #555; }
-	    	.x-list .x-list-disclosure { background: white !important; }
+	    	/*.x-list .x-list-disclosure { background: white !important; } */
 	    	#buttonbar { height: 60px; position: absolute; bottom: 0px; background: none; width: 100%; display: none; }
 	    	.button { opacity: 0.8; background: #080; height: 100%; width: 50%; display: block; text-align: center; vertical-align: middle; font-size: 30px; color: white;text-decoration: none; padding-top: 10px; }
 	    	#rightbutton { background: #800; float: right; position: relative; top: -60px; }
@@ -27,6 +27,18 @@
 	    	.x-carousel-item { background-image: url(img/darkdenim3.png); }
 	    	.auth_button { text-decoration: none; padding: 15px 20px; position: relative; top: 30px; font-weight: 100; font-family: "Arial"; }
 	    	.x-carousel-indicator { display: none; }
+	    	.x-list .x-list-item.x-item-selected { background: url(img/darkdenim3.png); border-top-color: #555;  }
+	    	.x-list .x-list-disclosure, .x-list .x-list-item.x-item-selected .x-list-disclosure { 
+				-webkit-mask: none;
+				background-image: url('img/pencil.png');
+				background-size: 80%;
+				background-color: #CCC;
+				background-repeat: no-repeat;
+				background-position: center;
+				border-radius: 5px;
+				vertical-align: middle;
+				-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);	    		
+	    	}
     	</style>
         
         <style>

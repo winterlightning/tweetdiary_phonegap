@@ -120,6 +120,17 @@
         multiSelect: false,
         grouped: true,
         indexBar: false,
+        /*
+              onItemTap: ()->
+                console.log("testing item tap")
+                  #alert "Disclose more info for " + record.get("firstName")
+                  console.log( record.data )
+                  window.r_id = record.data.id
+                  $("#buttonbar").show()
+                  $("#writearea").val(record.get("text"))
+                  window.carousel.setActiveItem( 0, 'flip' )
+        */
+
         onItemDisclosure: {
           scope: "test",
           handler: function(record, btn, index) {
@@ -170,7 +181,7 @@
         },
         items: [carousel1]
       });
-      $("#writearea").keydown(function(e) {
+      return $("#writearea").keydown(function(e) {
         var keyCode;
         keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
@@ -178,7 +189,6 @@
           return false;
         }
       });
-      return window.auto_sync();
     }
   });
 
