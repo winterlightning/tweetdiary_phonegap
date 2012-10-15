@@ -1,6 +1,13 @@
+window.r_id = "" #id of current one being edited
+
 #function to add a new entry
 window.create_new_entry = ()->
   console.log("create new entry called")
+  
+  #check if there is a window rid which means this is a edit
+  if window.r_id? and window.r_id isnt ""
+    window.save_entry()
+    return true
   
   content = $("#writearea").val()
   if content isnt ""
@@ -32,6 +39,7 @@ window.delete_entry = () ->
   window.store.loadData(get_entry_from_spine(), false)
   window.list.refresh()
   window.carousel.setActiveItem( 1, 'flip' )
+  window.r_id = ""
 
 window.save_entry = () ->
   e = Entry.find(window.r_id)
@@ -39,9 +47,12 @@ window.save_entry = () ->
   e.text = value
   e.save()
   
+  $("#writearea").val("")
+  
   window.store.loadData(get_entry_from_spine(), false)
   window.list.refresh()
   window.carousel.setActiveItem( 1, 'flip' )
+  window.r_id = ""
 
 Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app") #switch this with your own app key (please!!!!)
 
@@ -111,7 +122,7 @@ Ext.setup
         cls: "card"
 
       items: [
-        html: """<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>
+        html: """<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry; Hit return to save' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>
         <div id="buttonbar">
           <a class="button" onclick="window.save_entry()">Save</a>
           <a class="button" id="rightbutton" onclick="window.delete_entry()">Delete</a>
@@ -135,6 +146,9 @@ Ext.setup
     
     carousel1.addListener("cardswitch", (obj, newCard, oldCard, index, animated)-> 
       if index isnt 0
+        if window.rid isnt ""
+          $("#writearea").val("")
+        
         $("#buttonbar").hide()
     )
     

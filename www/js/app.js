@@ -2,9 +2,15 @@
 (function() {
   var Entry, exports;
 
+  window.r_id = "";
+
   window.create_new_entry = function() {
     var content, d, date, entry, hashtags, timeago;
     console.log("create new entry called");
+    if ((window.r_id != null) && window.r_id !== "") {
+      window.save_entry();
+      return true;
+    }
     content = $("#writearea").val();
     if (content !== "") {
       hashtags = twttr.txt.extractHashtags(content);
@@ -57,7 +63,8 @@
     e.destroy();
     window.store.loadData(get_entry_from_spine(), false);
     window.list.refresh();
-    return window.carousel.setActiveItem(1, 'flip');
+    window.carousel.setActiveItem(1, 'flip');
+    return window.r_id = "";
   };
 
   window.save_entry = function() {
@@ -66,9 +73,11 @@
     value = $("#writearea").val();
     e.text = value;
     e.save();
+    $("#writearea").val("");
     window.store.loadData(get_entry_from_spine(), false);
     window.list.refresh();
-    return window.carousel.setActiveItem(1, 'flip');
+    window.carousel.setActiveItem(1, 'flip');
+    return window.r_id = "";
   };
 
   Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app");
@@ -134,7 +143,7 @@
         },
         items: [
           {
-            html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" onclick=\"window.save_entry()\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
+            html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry; Hit return to save' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" onclick=\"window.save_entry()\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
           }, list, {
             title: "Tab 3",
             html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">\n  <br />\n  <p style=\"color: #fff; padding: 20px; padding-bottom: 0px;\">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>\n  <p style=\"color: #fff; padding: 20px\">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>\n  \n  <a class=\"large blue awesome\" onclick=\"window.auth()\">Authorize</a><br />\n  <a class=\"large blue awesome\" onclick=\"window.validate()\">Validate</a><br />\n\n  <a class=\"large black awesome\" onclick=\"window.sync_entry()\">Sync All</a>\n</div>"
@@ -144,6 +153,9 @@
       window.carousel = carousel1;
       carousel1.addListener("cardswitch", function(obj, newCard, oldCard, index, animated) {
         if (index !== 0) {
+          if (window.rid !== "") {
+            $("#writearea").val("");
+          }
           return $("#buttonbar").hide();
         }
       });
