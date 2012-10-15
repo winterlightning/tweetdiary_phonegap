@@ -114,7 +114,7 @@ Ext.setup
           <p style="color: #fff; padding: 20px">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>
           
           <a class="large black awesome" onclick="Nimbus.Auth.authorize()">Authorize</a><br />
-          <a class="large blue awesome">Validate</a>
+          <a class="large blue awesome" onclick="Nimbus.Auth.initialize()">Validate</a>
         </div>"""
       ]
     )
