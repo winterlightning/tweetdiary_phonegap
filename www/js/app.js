@@ -32,7 +32,7 @@
   window.get_entry_from_spine = function() {
     var all_entries, d, date, entry, timeago, _i, _len, _ref;
     all_entries = [];
-    _ref = Entry.all();
+    _ref = Entry.all().sort(Entry.ordersort);
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       entry = _ref[_i];
       d = new Date(entry.create_time);
@@ -73,6 +73,17 @@
 
   Entry = Nimbus.Model.setup("Entry", ["text", "create_time", "tags"]);
 
+  Entry.ordersort = function(a, b) {
+    var x, y;
+    x = new Date(a.create_time);
+    y = new Date(b.create_time);
+    if (x > y) {
+      return -1;
+    } else {
+      return 1;
+    }
+  };
+
   Ext.setup({
     tabletStartupScreen: "tablet_startup.png",
     phoneStartupScreen: "phone_startup.png",
@@ -86,7 +97,6 @@
       all_entries = get_entry_from_spine();
       window.store = new Ext.data.Store({
         model: "Entry",
-        sorters: "create_time",
         getGroupString: function(record) {
           return record.get("date");
         },

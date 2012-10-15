@@ -17,7 +17,7 @@ window.create_new_entry = ()->
 
 window.get_entry_from_spine = ()->
   all_entries = [] 
-  for entry in Entry.all()
+  for entry in Entry.all().sort(Entry.ordersort)
     d = new Date(entry.create_time)
     timeago = jQuery.timeago(d)
     date = (d.getUTCMonth() + 1 ) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
@@ -47,6 +47,11 @@ Nimbus.Auth.setup("Dropbox", "lejn01o1njs1elo", "2f02rqbnn08u8at", "diary_app") 
 
 Entry = Nimbus.Model.setup("Entry", ["text", "create_time", "tags"]) 
 
+Entry.ordersort = (a, b) ->
+  x = new Date(a.create_time)
+  y = new Date(b.create_time)
+  (if (x > y) then -1 else 1)
+
 Ext.setup
   tabletStartupScreen: "tablet_startup.png"
   phoneStartupScreen: "phone_startup.png"
@@ -62,7 +67,7 @@ Ext.setup
     
     window.store = new Ext.data.Store(
       model: "Entry"
-      sorters: "create_time"
+      #sorters: "create_time"
       getGroupString: (record) ->
         record.get("date")
 
