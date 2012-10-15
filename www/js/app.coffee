@@ -113,8 +113,8 @@ Ext.setup
           <p style="color: #fff; padding: 20px; padding-bottom: 0px;">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>
           <p style="color: #fff; padding: 20px">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>
           
-          <a class="large black awesome" onclick="Nimbus.Auth.authorize()">Authorize</a><br />
-          <a class="large blue awesome" onclick="Nimbus.Auth.initialize()">Validate</a>
+          <a class="large black awesome" onclick="window.auth()">Authorize</a><br />
+          <a class="large blue awesome" onclick="window.validate()">Validate</a>
         </div>"""
       ]
     )
@@ -144,5 +144,20 @@ Ext.setup
         window.create_new_entry()
         false
 
+window.auth = ()-> 
+  ios.notify( title: "Authentication in progress", message: "Wait for the browser window to open up and authenticate." )
+  Nimbus.Auth.authorize()
+
+window.validate = ()->
+  Nimbus.Auth.initialize()
+
+Nimbus.Auth.authorized_callback = ()->
+  ios.notify( title: "Validation", message: "Validation is done! Now your data is stored in Dropbox." )
+  Entry.sync_all( ()->
+    window.store.loadData(get_entry_from_spine(), false)
+    window.list.refresh()
+    ios.notify( title: "Synced", message: "Data synced!" )
+  )
+  
 exports = this #this is needed to get around the coffeescript namespace wrap
 exports.Entry = Entry

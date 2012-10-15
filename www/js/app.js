@@ -124,7 +124,7 @@
             html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" onclick=\"window.save_entry()\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
           }, list, {
             title: "Tab 3",
-            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">\n  <br />\n  <p style=\"color: #fff; padding: 20px; padding-bottom: 0px;\">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>\n  <p style=\"color: #fff; padding: 20px\">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>\n  \n  <a class=\"large black awesome\" onclick=\"Nimbus.Auth.authorize()\">Authorize</a><br />\n  <a class=\"large blue awesome\">Validate</a>\n</div>"
+            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">\n  <br />\n  <p style=\"color: #fff; padding: 20px; padding-bottom: 0px;\">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>\n  <p style=\"color: #fff; padding: 20px\">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>\n  \n  <a class=\"large black awesome\" onclick=\"window.auth()\">Authorize</a><br />\n  <a class=\"large blue awesome\" onclick=\"window.validate()\">Validate</a>\n</div>"
           }
         ]
       });
@@ -155,6 +155,33 @@
       });
     }
   });
+
+  window.auth = function() {
+    ios.notify({
+      title: "Authentication in progress",
+      message: "Wait for the browser window to open up and authenticate."
+    });
+    return Nimbus.Auth.authorize();
+  };
+
+  window.validate = function() {
+    return Nimbus.Auth.initialize();
+  };
+
+  Nimbus.Auth.authorized_callback = function() {
+    ios.notify({
+      title: "Validation",
+      message: "Validation is done! Now your data is stored in Dropbox."
+    });
+    return Entry.sync_all(function() {
+      window.store.loadData(get_entry_from_spine(), false);
+      window.list.refresh();
+      return ios.notify({
+        title: "Synced",
+        message: "Data synced!"
+      });
+    });
+  };
 
   exports = this;
 
