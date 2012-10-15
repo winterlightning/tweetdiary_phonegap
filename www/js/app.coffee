@@ -147,6 +147,8 @@ Ext.setup
         window.create_new_entry()
         false
 
+    window.auto_sync()
+
 window.auth = ()-> 
   ios_notify.notify( title: "Authentication in progress", message: "Wait for the browser window to open up and authenticate." )
   Nimbus.Auth.authorize()
@@ -167,6 +169,16 @@ window.sync_entry = ->
     )
   else
     ios_notify.notify( title: "Not Authorized", message: "You need to authorize first!" )
+
+window.auto_sync = ->
+  if Nimbus.Auth.authorized()
+    #console.log("auto-syncing")
+    
+    Entry.sync_all( ()->
+      window.store.loadData(get_entry_from_spine(), false)
+      window.list.refresh()
+      setTimeout("window.auto_sync()", 5000);
+    )
 
 exports = this #this is needed to get around the coffeescript namespace wrap
 exports.Entry = Entry

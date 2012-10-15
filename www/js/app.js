@@ -145,7 +145,7 @@
         },
         items: [carousel1]
       });
-      return $("#writearea").keydown(function(e) {
+      $("#writearea").keydown(function(e) {
         var keyCode;
         keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
@@ -153,6 +153,7 @@
           return false;
         }
       });
+      return window.auto_sync();
     }
   });
 
@@ -190,6 +191,16 @@
       return ios_notify.notify({
         title: "Not Authorized",
         message: "You need to authorize first!"
+      });
+    }
+  };
+
+  window.auto_sync = function() {
+    if (Nimbus.Auth.authorized()) {
+      return Entry.sync_all(function() {
+        window.store.loadData(get_entry_from_spine(), false);
+        window.list.refresh();
+        return setTimeout("window.auto_sync()", 5000);
       });
     }
   };
