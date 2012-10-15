@@ -124,7 +124,7 @@
             html: "<textarea type=\"textarea\" id='writearea' placeholder='Tap and add your entry' style=\"border:0px;border-radius:0px;padding:20px;font-size:30px;color:#fff;width:100%;height:100%;background-image: url(img/asfalt.png);\"></textarea>\n<div id=\"buttonbar\">\n  <a class=\"button\" onclick=\"window.save_entry()\">Save</a>\n  <a class=\"button\" id=\"rightbutton\" onclick=\"window.delete_entry()\">Delete</a>\n</div>"
           }, list, {
             title: "Tab 3",
-            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">\n  <br />\n  <p style=\"color: #fff; padding: 20px; padding-bottom: 0px;\">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>\n  <p style=\"color: #fff; padding: 20px\">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>\n  \n  <a class=\"large black awesome\" onclick=\"window.auth()\">Authorize</a><br />\n  <a class=\"large blue awesome\" onclick=\"window.validate()\">Validate</a>\n</div>"
+            html: "<div style=\"background-image: url(img/linen.png);height:100%;width:100%;text-align:center;\">\n  <br />\n  <p style=\"color: #fff; padding: 20px; padding-bottom: 0px;\">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>\n  <p style=\"color: #fff; padding: 20px\">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>\n  \n  <a class=\"large blue awesome\" onclick=\"window.auth()\">Authorize</a><br />\n  <a class=\"large blue awesome\" onclick=\"window.validate()\">Validate</a><br />\n\n  <a class=\"large black awesome\" onclick=\"window.sync_entry()\">Sync All</a>\n</div>"
           }
         ]
       });
@@ -173,14 +173,25 @@
       title: "Validation",
       message: "Validation is done! Now your data is stored in Dropbox."
     });
-    return Entry.sync_all(function() {
-      window.store.loadData(get_entry_from_spine(), false);
-      window.list.refresh();
-      return ios_notify.notify({
-        title: "Synced",
-        message: "Data synced!"
+    return window.sync_entry();
+  };
+
+  window.sync_entry = function() {
+    if (Nimbus.Auth.authorized()) {
+      return Entry.sync_all(function() {
+        window.store.loadData(get_entry_from_spine(), false);
+        window.list.refresh();
+        return ios_notify.notify({
+          title: "Synced",
+          message: "Data synced!"
+        });
       });
-    });
+    } else {
+      return ios_notify.notify({
+        title: "Not Authorized",
+        message: "You need to authorize first!"
+      });
+    }
   };
 
   exports = this;

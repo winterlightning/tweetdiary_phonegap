@@ -114,8 +114,10 @@ Ext.setup
           <p style="color: #fff; padding: 20px; padding-bottom: 0px;">Sync all your entries across multiple devices by setting up storage on Dropbox.</p>
           <p style="color: #fff; padding: 20px">First click on authorize and then allow data access on the Dropbox link in the browser. Then click on validate back in the app.</p>
           
-          <a class="large black awesome" onclick="window.auth()">Authorize</a><br />
-          <a class="large blue awesome" onclick="window.validate()">Validate</a>
+          <a class="large blue awesome" onclick="window.auth()">Authorize</a><br />
+          <a class="large blue awesome" onclick="window.validate()">Validate</a><br />
+
+          <a class="large black awesome" onclick="window.sync_entry()">Sync All</a>
         </div>"""
       ]
     )
@@ -154,11 +156,17 @@ window.validate = ()->
 
 Nimbus.Auth.authorized_callback = ()->
   ios_notify.notify( title: "Validation", message: "Validation is done! Now your data is stored in Dropbox." )
-  Entry.sync_all( ()->
-    window.store.loadData(get_entry_from_spine(), false)
-    window.list.refresh()
-    ios_notify.notify( title: "Synced", message: "Data synced!" )
-  )
+  window.sync_entry()
   
+window.sync_entry = ->
+  if Nimbus.Auth.authorized()
+    Entry.sync_all( ()->
+      window.store.loadData(get_entry_from_spine(), false)
+      window.list.refresh()
+      ios_notify.notify( title: "Synced", message: "Data synced!" )
+    )
+  else
+    ios_notify.notify( title: "Not Authorized", message: "You need to authorize first!" )
+
 exports = this #this is needed to get around the coffeescript namespace wrap
 exports.Entry = Entry
