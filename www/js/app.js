@@ -141,6 +141,11 @@
             return window.carousel.setActiveItem(0, 'flip');
           }
         },
+        listener: {
+          itemtap: function(list, index, item, e) {
+            return e.preventDefault();
+          }
+        },
         store: window.store
       };
       list = new Ext.List(Ext.apply(groupingBase, {

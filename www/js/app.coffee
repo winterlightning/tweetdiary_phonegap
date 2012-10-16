@@ -119,7 +119,11 @@ Ext.setup
           $("#buttonbar").show()
           $("#writearea").val(record.get("text"))
           window.carousel.setActiveItem( 0, 'flip' )
-          
+      
+      listener:
+          itemtap:  (list, index, item, e) ->
+            e.preventDefault();
+            
       store: window.store
 
     list = new  Ext.List(Ext.apply(groupingBase,
