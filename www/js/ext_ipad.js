@@ -101,7 +101,7 @@
           }
         ]
       });
-      return $("#writearea").keydown(function(e) {
+      $("#writearea").keydown(function(e) {
         var keyCode;
         keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
@@ -109,6 +109,7 @@
           return false;
         }
       });
+      return window.auto_sync();
     }
   });
 

@@ -21,6 +21,8 @@ window.create_new_entry = ()->
     date = (d.getUTCMonth() + 1 ) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear()
 
     window.store.loadData([{text: entry.text, create_time: timeago, tags: entry.tags.toString(), date: date, id: entry.id, seconds: (d/1000) }], true)
+    
+    ios_notify.notify( title: "Entry Added", message: content )
 
 window.get_entry_from_spine = ()->
   all_entries = [] 
@@ -91,14 +93,20 @@ window.sync_entry = ->
     ios_notify.notify( title: "Not Authorized", message: "You need to authorize first!" )
 
 window.auto_sync = ->
-  if Nimbus.Auth.authorized()
-    #console.log("auto-syncing")
+  if Nimbus.Auth.authorized() and (window.navigator.onLine or navigator.network.connection.type is Connection.WIFI or navigator.network.connection.type is Connection.CELL_3G) 
+    console.log("auto-syncing")
     
     Entry.sync_all( ()->
+      
       window.store.loadData(get_entry_from_spine(), false)
       window.list.refresh()
       setTimeout("window.auto_sync()", 5000);
+      
+      window.last_data = localStorage["Entry"]
     )
+  else
+    console.log("auto-syncing failed due to no connection or no authentication")
+    setTimeout("window.auto_sync()", 5000)
 
 exports = this #this is needed to get around the coffeescript namespace wrap
 exports.Entry = Entry

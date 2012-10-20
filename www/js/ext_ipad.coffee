@@ -137,4 +137,5 @@ Ext.setup
         window.create_new_entry()
         false
 
-    #window.auto_sync()
+    window.auto_sync()
+    

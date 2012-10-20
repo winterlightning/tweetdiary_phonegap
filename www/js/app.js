@@ -23,7 +23,7 @@
       d = new Date(entry.create_time);
       timeago = jQuery.timeago(d);
       date = (d.getUTCMonth() + 1) + "/" + d.getUTCDate() + "/" + d.getUTCFullYear();
-      return window.store.loadData([
+      window.store.loadData([
         {
           text: entry.text,
           create_time: timeago,
@@ -33,6 +33,10 @@
           seconds: d / 1000
         }
       ], true);
+      return ios_notify.notify({
+        title: "Entry Added",
+        message: content
+      });
     }
   };
 
@@ -139,12 +143,17 @@
   };
 
   window.auto_sync = function() {
-    if (Nimbus.Auth.authorized()) {
+    if (Nimbus.Auth.authorized() && (window.navigator.onLine || navigator.network.connection.type === Connection.WIFI || navigator.network.connection.type === Connection.CELL_3G)) {
+      console.log("auto-syncing");
       return Entry.sync_all(function() {
         window.store.loadData(get_entry_from_spine(), false);
         window.list.refresh();
-        return setTimeout("window.auto_sync()", 5000);
+        setTimeout("window.auto_sync()", 5000);
+        return window.last_data = localStorage["Entry"];
       });
+    } else {
+      console.log("auto-syncing failed due to no connection or no authentication");
+      return setTimeout("window.auto_sync()", 5000);
     }
   };
 

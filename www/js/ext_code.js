@@ -58,8 +58,10 @@
         store: window.store
       };
       list = new Ext.List(Ext.apply(groupingBase, {
+        id: "entry_list",
         centered: true,
-        modal: true
+        modal: true,
+        html: "<div id='entryfilter' style='position: absolute; width: 100%; height: 40px; bottom: 0px; background-color: #050'>ABCDE</div>"
       }));
       window.list = list;
       carousel1 = new Ext.Carousel({
